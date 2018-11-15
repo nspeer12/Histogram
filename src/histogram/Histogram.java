@@ -24,7 +24,7 @@ public class Histogram extends javax.swing.JFrame {
 
    public Histogram() {
       initComponents();
-      this.setTitle("COP3330 Sentence Histograms by <your_name(s)>");
+      this.setTitle("COP3330 Sentence Histograms by Stephen Speer");
    }
 
    private void initComponents() {
@@ -109,25 +109,32 @@ public class Histogram extends javax.swing.JFrame {
 
    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {
       
-      /****************************************
-       *                                      *
-       *                                      *
-       *        Insert your code here         *
-       *                                      *
-       *                                      *
-       ****************************************/
+      String userLoc = System.getProperty("user.dir");
+      File userDir = new File(userLoc);
+      JFileChooser choice = new JFileChooser(userDir);
+      choice.setVisible(true);
+      choice.showOpenDialog(null);
       
+      if(choice != null)
+      {
+    	  sourceArea.setText(outPanel.readFile(choice.getSelectedFile()));
+          numField.setEnabled(true);
+          numField.setText("");
+          showButton.setEnabled(true);
+          
+      
+      }
+      	
    }
 
    private void showButtonActionPerformed(java.awt.event.ActionEvent evt) {
       
-      /****************************************
-       *                                      *
-       *                                      *
-       *        Insert your code here         *
-       *                                      *
-       *                                      *
-       ****************************************/
+	   Integer line = Integer.parseInt(numField.getText());
+
+	   if( line instanceof Integer)
+	   {
+		   System.out.println("HI");
+	   }
       
    }
 
