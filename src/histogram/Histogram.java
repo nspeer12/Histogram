@@ -9,6 +9,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+
 public class Histogram extends javax.swing.JFrame {
    
    private static final long serialVersionUID = 1L;
@@ -127,14 +128,24 @@ public class Histogram extends javax.swing.JFrame {
       	
    }
 
-   private void showButtonActionPerformed(java.awt.event.ActionEvent evt) {
+   private void showButtonActionPerformed(java.awt.event.ActionEvent evt) 
+   {
       
-	   Integer line = Integer.parseInt(numField.getText());
+	   String input = numField.getText();
+	   
+	   // check for bad input
+	   for(int i = 0; i < input.length(); i++)
+		   if(!Character.isDigit(numField.getText().charAt(i)))
+		   {
+				  JOptionPane.showMessageDialog(null, "Text field is not an integer");
+				  System.out.println("err");
+				  return;
+		   }
+	   
+	   outPanel.showHisto(Integer.parseInt(input), true);
+	   
 
-	   if( line instanceof Integer)
-	   {
-		   System.out.println("HI");
-	   }
+		   
       
    }
 

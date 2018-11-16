@@ -61,7 +61,8 @@ public class HistogramPanel extends JPanel {
 	      showHisto( snum, false );
 	   }
 	   
-	   public void showHisto( int n, boolean b ) {            
+	   public void showHisto( int n, boolean b ) {        
+		   System.out.println("working");
 	      if( sents != null && n >= 0 && n < sents.size() ) {
 	         snum = n;
 	         Graphics gc = this.getGraphics();
@@ -89,6 +90,8 @@ public class HistogramPanel extends JPanel {
 	       *                                      *
 	       *                                      *
 	       ****************************************/
+		//  gc.drawLine(0.1 * this.getWidth(), 0, this.getWidth() * 0.1, this.getHeight() * 0.8);
+		   
 	      
 	   }
 	   
