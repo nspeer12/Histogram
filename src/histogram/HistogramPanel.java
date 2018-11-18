@@ -11,12 +11,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 
 public class HistogramPanel extends JPanel {
 	   
@@ -62,7 +65,7 @@ public class HistogramPanel extends JPanel {
 	   }
 	   
 	   public void showHisto( int n, boolean b ) {        
-		   System.out.println("working");
+
 	      if( sents != null && n >= 0 && n < sents.size() ) {
 	         snum = n;
 	         Graphics gc = this.getGraphics();
@@ -73,6 +76,7 @@ public class HistogramPanel extends JPanel {
 	      else if( b && sents != null ) {
 	         JOptionPane.showMessageDialog(this, "Sentence index out of range");
 	      }
+	      
 	   }
 	   
 	   private void clearDisplay( Graphics gc ) {      
@@ -81,30 +85,71 @@ public class HistogramPanel extends JPanel {
 	   }
 	   
 	   private void drawLines( Graphics gc ) { 
-
+		   System.out.println("here");
+		   gc.setColor(Color.red);
+		  // gc.drawRect(100, 100, 60, 100);
 	      
-	      /****************************************
-	       *                                      *
-	       *                                      *
-	       *        Insert your code here         *
-	       *                                      *
-	       *                                      *
-	       ****************************************/
-		//  gc.drawLine(0.1 * this.getWidth(), 0, this.getWidth() * 0.1, this.getHeight() * 0.8);
+		// Draw Axis
+		gc.drawLine((int) (getWidth() * 0.1) , (int) (getHeight() * 0.1), (int) (getWidth() * 0.1), (int) (getHeight() * 0.8));
+		gc.drawLine((int) (getWidth() * 0.1), (int) (getHeight() * 0.8), (int) (getWidth() * 0.8), (int) (getHeight() * 0.8));
+
 		   
 	      
 	   }
 	   
 	   private void drawHisto( Graphics gc ) {
-
-	      
-	      /****************************************
-	       *                                      *
-	       *                                      *
-	       *        Insert your code here         *
-	       *                                      *
-	       *                                      *
-	       ****************************************/
+		   
+		   // grab the sentence we need
+		   String str = sents.get(snum);
+		   
+		   // create buckets to put # of instance of characters
+		   int[] bucket = new int[26];
+		   
+		   for(int i = 0; i < str.length(); i ++)
+		   {
+			   // ignore spaces
+			   if( (int) str.charAt(i) == 32)
+				   continue;
+			   
+			   // subtracting 'a' will give character values from 0-25
+			   bucket[ (str.charAt(i) - 'a') ] ++;
+		   }
+		   
+		   // width of each column
+		   int width = (int) (getWidth() * 0.7 / 26);
+		   
+		   // find the max number of instances of character
+		   int maxVal = 0;
+		   for(Integer x : bucket)
+			   if(x > maxVal)
+				   maxVal = x;
+		   
+		   
+		   System.out.println("max " + maxVal);
+		   
+		   // height will represent 1 instance of a char
+		   int height = (int) ( (this.getHeight() * 0.7) / (maxVal));
+		   
+		   // coordinates of where to draw rectangles
+		   // +- 2 pixels so axis is not overlapped
+		   int xLoc = (int) (this.getWidth() * 0.1) + 2;
+		   
+		   // yLoc is at bottom of graph
+		   int yLoc = (int) (this.getHeight() * 0.8) + - 2;
+		   
+		   gc.setColor(Color.blue);
+		   
+		   // loop through alphabet and draw each rectangle
+		   for(int x = 0; x < 26; x ++)
+		   {
+			   // ignore empty buckets
+			   if(bucket[x] != 0)
+				   gc.drawRect(xLoc, yLoc - (bucket[x] * height) , width, height * bucket[x] );
+			
+			   // move along x-axis
+			   xLoc += width;
+		   }
+		   
 	      
 	   }
 
