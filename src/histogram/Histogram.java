@@ -3,6 +3,7 @@
  * COP3330 - Fall 2018
  * Author(s):  Stephen Speer
  */
+
 package histogram;
 
 import java.io.File;

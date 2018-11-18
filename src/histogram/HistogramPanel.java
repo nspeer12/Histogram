@@ -3,6 +3,7 @@
  * COP3330 - Fall 2018
  * Author: Stephen Speer
  */
+
 package histogram;
 
 import java.awt.Color;
@@ -11,8 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -85,16 +84,12 @@ public class HistogramPanel extends JPanel {
 	   }
 	   
 	   private void drawLines( Graphics gc ) { 
-		   System.out.println("here");
 		   gc.setColor(Color.red);
-		  // gc.drawRect(100, 100, 60, 100);
-	      
-		// Draw Axis
-		gc.drawLine((int) (getWidth() * 0.1) , (int) (getHeight() * 0.1), (int) (getWidth() * 0.1), (int) (getHeight() * 0.8));
-		gc.drawLine((int) (getWidth() * 0.1), (int) (getHeight() * 0.8), (int) (getWidth() * 0.8), (int) (getHeight() * 0.8));
 
-		   
-	      
+		   // Draw Axis
+		   gc.drawLine((int) (getWidth() * 0.1) , (int) (getHeight() * 0.1), (int) (getWidth() * 0.1), (int) (getHeight() * 0.8));
+		   gc.drawLine((int) (getWidth() * 0.1), (int) (getHeight() * 0.8), (int) (getWidth() * 0.8), (int) (getHeight() * 0.8));
+  
 	   }
 	   
 	   private void drawHisto( Graphics gc ) {
@@ -103,29 +98,13 @@ public class HistogramPanel extends JPanel {
 		   String str = sents.get(snum);
 		   
 		   // create buckets to put # of instance of characters
-		   int[] bucket = new int[26];
-		   
-		   for(int i = 0; i < str.length(); i ++)
-		   {
-			   // ignore spaces
-			   if( (int) str.charAt(i) == 32)
-				   continue;
-			   
-			   // subtracting 'a' will give character values from 0-25
-			   bucket[ (str.charAt(i) - 'a') ] ++;
-		   }
-		   
+		   int[] bucket = rawHisto(str);
+
 		   // width of each column
 		   int width = (int) (getWidth() * 0.7 / 26);
 		   
 		   // find the max number of instances of character
-		   int maxVal = 0;
-		   for(Integer x : bucket)
-			   if(x > maxVal)
-				   maxVal = x;
-		   
-		   
-		   System.out.println("max " + maxVal);
+		   int maxVal = findMax(bucket);
 		   
 		   // height will represent 1 instance of a char
 		   int height = (int) ( (this.getHeight() * 0.7) / (maxVal));
@@ -137,35 +116,35 @@ public class HistogramPanel extends JPanel {
 		   // yLoc is at bottom of graph
 		   int yLoc = (int) (this.getHeight() * 0.8) + - 2;
 		   
-		   gc.setColor(Color.blue);
 		   
 		   // loop through alphabet and draw each rectangle
 		   for(int x = 0; x < 26; x ++)
 		   {
+			   gc.setColor(Color.blue);
+			   
 			   // ignore empty buckets
 			   if(bucket[x] != 0)
 				   gc.drawRect(xLoc, yLoc - (bucket[x] * height) , width, height * bucket[x] );
-			
+			   
+			   gc.setColor(Color.RED);
+			   
+			   // draw alphabet under x axis
+			   gc.drawString(String.valueOf((char) (x + 'a' )), xLoc + (width / 2) - 2, (int) (this.getHeight() * 0.85));
+			   
+			   // draw tick marks and values on y axis
+			   for(int k = 0; k <= maxVal; k ++)
+			   {   
+				   // don't draw tick on first line
+				   if(k != 0)
+					   gc.drawLine((int)(this.getWidth() * 0.08) , yLoc - (height * k), (int) (this.getWidth() * .1), yLoc - (height * k));
+				   
+				   gc.drawString(String.valueOf(k), (int)(this.getWidth() * 0.06), (yLoc - (height * k)) + 4);
+			   }
 			   // move along x-axis
 			   xLoc += width;
 		   }
-		   
-	      
 	   }
 
-	   private int[] scaledHisto( int[] inp ) { 
-	      int[] histo = new int[ inp.length ];
-	      int max = findMax( inp );
-	      
-	      double scaleFactor = 0.8 * this.getHeight();
-	      for( int i = 0; i < histo.length; i++ ) {
-	         double scaled =  scaleFactor * 
-	               ( ((double) inp[ i ] ) / max );
-	         histo[ i ] = (int) Math.floor(scaled);
-	      }
-	      return histo;
-	   }
-		   
 	   private int[] rawHisto( String s ) {
 	      s = s.toLowerCase();
 	      int[] letter = new int[ 26 ];
